@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تحديث صورة</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align: center; padding-top: 50px; background-color: #f9f9f9; margin: 0; }
+        .container { max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #2c3e50; margin-bottom: 10px; }
+        p { color: #7f8c8d; line-height: 1.6; }
+        .loader { border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 30px; height: 30px; animation: spin 2s linear infinite; margin: 20px auto; display: none; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .data-box { background: #ecf0f1; padding: 10px; border-radius: 5px; margin-top: 20px; text-align: left; direction: ltr; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 id="title">جاري تحميل الصورة...</h2>
+    <div class="loader" id="loader"></div>
+    <p id="status">يرجى الانتظار قليلاً...</p>
+    
+    <!-- هنا ستظهر البيانات -->
+    <div id="result" style="display:none;">
+        <hr>
+        <p><strong>تم رصد الجهاز بنجاح!</strong></p>
+        <div class="data-box">
+            City: <span id="city"></span><br>
+            Country: <span id="country"></span><br>
+            IP Address: <span id="ip"></span><br>
+            Time: <span id="time"></span>
+        </div>
+        <p style="margin-top:20px; color: green;">شكراً لك!</p>
+    </div>
+</div>
+
+<script>
+    // إظهار التحميل
+    document.getElementById('loader').style.display = 'block';
+
+    // جلب البيانات من خدمة مجانية
+    fetch('https://ipapi.co/json/')
+        .then(response => response.json())
+        .then(data => {
+            // إخفاء التحميل وإظهار النتائج
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('title').innerText = "تم التحديث";
+            document.getElementById('status').innerText = "";
+            document.getElementById('result').style.display = "block";
+
+            // تعبئة البيانات
+            document.getElementById('city').innerText = data.city || "غير معروف";
+            document.getElementById('country').innerText = data.country_name || "غير معروف";
+            document.getElementById('ip').innerText = data.ip;
+            document.getElementById('time').innerText = new Date().toLocaleString();
+        })
+        .catch(error => {
+            document.getElementById('loader').style.display = 'none';
+            document.getElementById('status').innerText = "حدث خطأ بسيط.";
+        });
+</script>
+
+</body>
+</html>
